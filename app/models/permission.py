@@ -1,18 +1,19 @@
-from sqlalchemy import Column, Integer, String, Boolean, TIMESTAMP
+# app/models/permission.py
+from sqlalchemy import Column, Integer, String, TIMESTAMP
 from sqlalchemy.orm import relationship
 from app.db.base import Base
 from datetime import datetime, timezone
 
 
-class User(Base):
-    __tablename__ = "db_user"
+class Permission(Base):
+    __tablename__ = "db_permissions"
 
     id = Column(Integer, primary_key=True, index=True)
-    email = Column(String(255), unique=True, index=True, nullable=False)
-    hashed_password = Column(String(255), nullable=False)
-    is_active = Column(Boolean, default=True)
+    code = Column(String(50), unique=True, nullable=False)  # 权限标识
+    name = Column(String(100), nullable=False)  # 权限描述
     created_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc))
     updated_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc),
                         onupdate=lambda: datetime.now(timezone.utc))
 
-    roles = relationship("Role", secondary="db_user_roles", back_populates="users")
+
+roles = relationship("Role", secondary="db_role_permissions", back_populates="permissions")
