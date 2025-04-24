@@ -1,14 +1,22 @@
 # app/models/role_permissions.py
-from sqlalchemy import Column, Integer, TIMESTAMP
-from app.db.base import Base
+
+from sqlmodel import SQLModel, Field
 from datetime import datetime, timezone
+from typing import Optional
 
 
-class RolePermission(Base):
+class RolePermissionLink(SQLModel, table=True):
     __tablename__ = "db_role_permissions"
 
-    role_id = Column(Integer, primary_key=True)
-    permission_id = Column(Integer, primary_key=True)
-    created_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc),
-                        onupdate=lambda: datetime.now(timezone.utc))
+    # 角色 ID（作为联合主键）
+    role_id: int = Field(default=None, primary_key=True)
+
+    # 权限 ID（作为联合主键）
+    permission_id: int = Field(default=None, primary_key=True)
+
+    # 创建时间 & 更新时间（UTC）
+    created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
+    )

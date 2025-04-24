@@ -7,12 +7,16 @@ requires-python = ">=3.12"
 dependencies = [
     "alembic>=1.15.2",
     "fastapi-permissions>=0.2.7",
-    "fastapi-users[sqlalchemy]>=14.0.1",
+    "fastapi-users[sqlalchemy,sqlalchemy2]>=14.0.1",
     "fastapi[all]>=0.115.12",
+    "loguru>=0.7.3",
     "passlib>=1.7.4",
     "pydantic-settings>=2.9.1",
     "pymysql>=1.1.1",
+    "pytest>=8.3.5",
+    "pytest-asyncio>=0.26.0",
     "python-jose>=3.4.0",
     "sqlalchemy>=2.0.40",
+    "sqlmodel>=0.0.24",
     "uvicorn>=0.34.2",
 ]

@@ -1,12 +1,22 @@
-from pydantic_settings import BaseSettings
-from dotenv import load_dotenv
-import os
+# app/core/config.py
 
-load_dotenv()
+from pydantic import SecretStr
+from pydantic_settings import BaseSettings
+
 
 class Settings(BaseSettings):
-    DATABASE_URL: str = os.getenv("DATABASE_URL")
-    SECRET_KEY: str = os.getenv("SECRET_KEY")
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES"))
+    DATABASE_URL: SecretStr
+    SECRET_KEY: SecretStr
+    ACCESS_TOKEN_EXPIRE_MINUTES: int = 30
+
+    DEBUG: bool = False
+    LOG_LEVEL: str = "INFO"  # 可选项：TRACE/DEBUG/INFO/WARNING/ERROR/CRITICAL
+
+    # API_PREFIX: str
+
+    class Config:
+        env_file = ".env"
+        env_file_encoding = 'utf-8'  # 重要：处理中文环境
+
 
 settings = Settings()

@@ -1,19 +1,32 @@
 # app/models/permission.py
-from sqlalchemy import Column, Integer, String, TIMESTAMP
-from sqlalchemy.orm import relationship
-from app.db.base import Base
+
+from sqlmodel import SQLModel, Field, Relationship
 from datetime import datetime, timezone
+from typing import Optional, List
+
+from app.models.role_permissions import RolePermissionLink  # 引入关联表
 
 
-class Permission(Base):
+class Permission(SQLModel, table=True):
     __tablename__ = "db_permissions"
 
-    id = Column(Integer, primary_key=True, index=True)
-    code = Column(String(50), unique=True, nullable=False)  # 权限标识
-    name = Column(String(100), nullable=False)  # 权限描述
-    created_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc))
-    updated_at = Column(TIMESTAMP, default=lambda: datetime.now(timezone.utc),
-                        onupdate=lambda: datetime.now(timezone.utc))
+    # 权限 ID（主键）
+    id: Optional[int] = Field(default=None, primary_key=True, index=True)
 
+    # 权限唯一标识
+    code: str = Field(nullable=False, unique=True, max_length=50)
 
-roles = relationship("Role", secondary="db_role_permissions", back_populates="permissions")
+    # 权限描述
+    name: str = Field(nullable=False, max_length=100)
+
+    # 时间戳（UTC）
+    created_at: Optional[datetime] = Field(default_factory=lambda: datetime.now(timezone.utc))
+    updated_at: datetime = Field(
+        default_factory=lambda: datetime.now(timezone.utc),
+        sa_column_kwargs={"onupdate": lambda: datetime.now(timezone.utc)}
+    )
+    # 与角色的多对多关系（通过无外键的中间表）
+    roles: List["Role"] = Relationship(
+        back_populates="permissions",
+        link_model=RolePermissionLink
+    )
