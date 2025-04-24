@@ -36,7 +36,7 @@ router = APIRouter(
 )
 async def create_user(
     user_data: UserCreateRequest,
-    db: Session = Depends(get_session())
+    db: Session = Depends(get_session)
 ):
     """创建新用户"""
     service = UserService(db)
