@@ -6,6 +6,7 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "aiomysql>=0.2.0",
     "alembic>=1.15.2",
     "fastapi-permissions>=0.2.7",
     "fastapi-users[sqlalchemy,sqlalchemy2]>=14.0.1",

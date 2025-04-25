@@ -1,8 +1,8 @@
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI,Request
+from fastapi import FastAPI, Request
 
-from app.api import users
+from app.api import api_router
 from app.core.config import settings
 from app.core.logging import logger
 from app.core.middleware import LoggingMiddleware
@@ -30,11 +30,12 @@ app = FastAPI(lifespan=lifespan)
 app.add_middleware(LoggingMiddleware)
 
 
+# prefix=settings.API_PREFIX  # 例如: /api/v1
 # 注册路由
-app.include_router(
-    users.router,
-    # prefix=settings.API_PREFIX  # 例如: /api/v1
-)
+app.include_router(api_router)
+
+# app.include_router(roles.router, prefix="/api/v1")  # 新增角色路由
+
 
 @app.get("/")
 async def root(request: Request):
